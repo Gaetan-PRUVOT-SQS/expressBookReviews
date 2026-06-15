@@ -34,7 +34,7 @@ regd_users.post("/login", (req, res) => {
   const accessToken = jwt.sign({ username }, "access", { expiresIn: 60 * 60 });
   req.session.authorization = { accessToken, username };
 
-  return res.status(200).json({ message: "User successfully logged in." });
+  return res.status(200).json({ message: "Login successful!" });
 });
 
 // Task 8: Add or modify a book review (logged in users only).
@@ -83,7 +83,7 @@ regd_users.delete("/auth/review/:isbn", (req, res) => {
   delete books[isbn].reviews[username];
 
   return res.status(200).json({
-    message: `Review for ISBN ${isbn} posted by ${username} deleted.`,
+    message: `Review for ISBN ${isbn} deleted by ${username}.`,
     reviews: books[isbn].reviews,
   });
 });
