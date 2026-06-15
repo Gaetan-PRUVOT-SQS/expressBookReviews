@@ -1,0 +1,4 @@
+node_modules/
+outputs/cookies.txt
+*.log
+.DS_Store
