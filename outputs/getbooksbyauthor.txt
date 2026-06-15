@@ -1,3 +1,5 @@
+$ curl "http://localhost:5000/author/Jane%20Austen"
+
 {
     "booksbyauthor": {
         "8": {

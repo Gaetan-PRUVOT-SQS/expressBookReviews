@@ -1,1 +1,4 @@
+$ curl -b cookies.txt -X PUT \
+    "http://localhost:5000/customer/auth/review/1?review=An%20absolute%20classic%20of%20African%20literature."
+
 {"message":"Review for ISBN 1 successfully added.","reviews":{"alice":"An absolute classic of African literature."}}

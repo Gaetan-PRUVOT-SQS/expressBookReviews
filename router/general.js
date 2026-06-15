@@ -1,8 +1,13 @@
 const express = require("express");
+const axios = require("axios");
 let books = require("./booksdb.js");
 let isValid = require("./auth_users.js").isValid;
 let users = require("./auth_users.js").users;
 const public_users = express.Router();
+
+// Base URL used by the Axios methods below (Tasks 10–13). It points at this
+// same server's public endpoints. Override with the BASE_URL env variable.
+const BASE_URL = process.env.BASE_URL || "http://localhost:5000";
 
 // Task 6: Register a new user.
 public_users.post("/register", (req, res) => {
@@ -93,4 +98,50 @@ public_users.get("/review/:isbn", (req, res) => {
   return res.status(200).send(JSON.stringify(books[isbn].reviews, null, 4));
 });
 
+// ===========================================================================
+// Task 10: Retrieve all books and details by ISBN / author / title using
+// Axios with async/await and Promise callbacks.
+// Start the server (`npm start`), then call these from a Node client.
+// ===========================================================================
+
+// Task 10 — Get all books (async/await with Axios).
+const getAllBooks = async () => {
+  const response = await axios.get(`${BASE_URL}/`);
+  return response.data;
+};
+
+// Task 11 — Get book details by ISBN (Promise callbacks with Axios).
+const getBookByISBN = (isbn) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .get(`${BASE_URL}/isbn/${isbn}`)
+      .then((response) => resolve(response.data))
+      .catch((error) => reject(error));
+  });
+};
+
+// Task 12 — Get book details by author (Promise callbacks with Axios).
+const getBooksByAuthor = (author) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .get(`${BASE_URL}/author/${encodeURIComponent(author)}`)
+      .then((response) => resolve(response.data))
+      .catch((error) => reject(error));
+  });
+};
+
+// Task 13 — Get book details by title (Promise callbacks with Axios).
+const getBooksByTitle = (title) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .get(`${BASE_URL}/title/${encodeURIComponent(title)}`)
+      .then((response) => resolve(response.data))
+      .catch((error) => reject(error));
+  });
+};
+
 module.exports.general = public_users;
+module.exports.getAllBooks = getAllBooks;
+module.exports.getBookByISBN = getBookByISBN;
+module.exports.getBooksByAuthor = getBooksByAuthor;
+module.exports.getBooksByTitle = getBooksByTitle;
