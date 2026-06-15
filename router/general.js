@@ -104,39 +104,63 @@ public_users.get("/review/:isbn", (req, res) => {
 // Start the server (`npm start`), then call these from a Node client.
 // ===========================================================================
 
+// Turns an Axios error into a clear, detailed message (status + server body).
+const describeAxiosError = (error, context) => {
+  if (error.response) {
+    return `${context} failed (HTTP ${error.response.status}): ${JSON.stringify(error.response.data)}`;
+  }
+  if (error.request) {
+    return `${context} failed: no response from server. Is it running on ${BASE_URL}?`;
+  }
+  return `${context} failed: ${error.message}`;
+};
+
 // Task 10 — Get all books (async/await with Axios).
 const getAllBooks = async () => {
-  const response = await axios.get(`${BASE_URL}/`);
-  return response.data;
+  try {
+    const response = await axios.get(`${BASE_URL}/`);
+    return response.data;
+  } catch (error) {
+    throw new Error(describeAxiosError(error, "Get all books"));
+  }
 };
 
 // Task 11 — Get book details by ISBN (Promise callbacks with Axios).
 const getBookByISBN = (isbn) => {
   return new Promise((resolve, reject) => {
+    if (isbn === undefined || isbn === null || `${isbn}`.trim() === "") {
+      return reject(new Error("An ISBN must be provided."));
+    }
     axios
-      .get(`${BASE_URL}/isbn/${isbn}`)
+      .get(`${BASE_URL}/isbn/${encodeURIComponent(isbn)}`)
       .then((response) => resolve(response.data))
-      .catch((error) => reject(error));
+      .catch((error) => reject(new Error(describeAxiosError(error, `Get book by ISBN ${isbn}`))));
   });
 };
 
 // Task 12 — Get book details by author (Promise callbacks with Axios).
 const getBooksByAuthor = (author) => {
   return new Promise((resolve, reject) => {
+    if (!author || `${author}`.trim() === "") {
+      return reject(new Error("An author name must be provided."));
+    }
     axios
       .get(`${BASE_URL}/author/${encodeURIComponent(author)}`)
       .then((response) => resolve(response.data))
-      .catch((error) => reject(error));
+      .catch((error) => reject(new Error(describeAxiosError(error, `Get books by author ${author}`))));
   });
 };
 
 // Task 13 — Get book details by title (Promise callbacks with Axios).
 const getBooksByTitle = (title) => {
   return new Promise((resolve, reject) => {
+    if (!title || `${title}`.trim() === "") {
+      return reject(new Error("A title must be provided."));
+    }
     axios
       .get(`${BASE_URL}/title/${encodeURIComponent(title)}`)
       .then((response) => resolve(response.data))
-      .catch((error) => reject(error));
+      .catch((error) => reject(new Error(describeAxiosError(error, `Get books by title ${title}`))));
   });
 };
 
