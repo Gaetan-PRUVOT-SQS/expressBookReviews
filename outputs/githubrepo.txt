@@ -1,0 +1,10 @@
+$ curl -s https://api.github.com/repos/Gaetan-PRUVOT-SQS/expressBookReviews \
+    | python3 -c "import sys,json; d=json.load(sys.stdin); print(json.dumps({k:d[k] for k in [\"full_name\",\"fork\"]} | {\"parent\":d[\"parent\"][\"full_name\"],\"source\":d[\"source\"][\"full_name\"]}, indent=2))"
+
+{
+  "full_name": "Gaetan-PRUVOT-SQS/expressBookReviews",
+  "fork": true,
+  "parent": "ibm-developer-skills-network/expressBookReviews",
+  "source": "ibm-developer-skills-network/expressBookReviews",
+  "html_url": "https://github.com/Gaetan-PRUVOT-SQS/expressBookReviews"
+}
